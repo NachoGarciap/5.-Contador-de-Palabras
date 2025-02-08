@@ -5,34 +5,35 @@ class ContadorPalabras:
 
     def __init__(self):
         print('----- Contador de Palabras -----')
-        self.nombre_archivo = None  # Para almacenar el nombre del archivo
 
     def crear_archivo(self):
         try:
-            self.nombre_archivo = input('Introduce el nombre del archivo: ')
-            with open(self.nombre_archivo, 'w', encoding='utf-8') as archivo:
-                print(f'Archivo "{self.nombre_archivo}" creado correctamente.')
+            nombre_archivo = input('Introduce el nombre del archivo: ')
+            with open(nombre_archivo, 'w', encoding='utf-8') as archivo:
+                print(f'Archivo "{nombre_archivo}" creado correctamente.')
         except Exception as e:
             print(f'Error al crear el archivo: {e}')
 
     def listar_archivos(self):
-        print('\n----- Archivos en el directorio actual -----')
-        archivos = [f for f in os.listdir()]
+        print('\n ----- Archivos en el directorio actual -----')
+        archivos = [f for f in os.listdir() if os.path.isfile(f)]  # Solo archivos, no carpetas
         if archivos:
             for archivo in archivos:
-                print(f'- {archivo}')
+                print(f'{archivo}')
         else:
-            print('No hay archivos en el directorio.')
+            print('⚠️ No hay archivos en el directorio.')
 
     def escribir_archivo(self):
-        if not self.nombre_archivo:
-            print('Primero debes crear un archivo.')
+        nombre_archivo = input('Introduce el nombre del archivo donde quieres escribir: ')
+
+        if not os.path.exists(nombre_archivo):
+            print('El archivo no existe. Primero debes crearlo.')
             return
 
         try:
-            with open(self.nombre_archivo, 'a', encoding='utf-8') as archivo:
+            with open(nombre_archivo, 'a', encoding='utf-8') as archivo:
                 texto = input('Escribe el texto que quieres guardar en el archivo:\n')
-                archivo.write(texto + '\n')  # Se agrega el texto con un salto de línea
+                archivo.write(texto + '\n')  # Agrega texto con un salto de línea
                 print('Texto guardado correctamente.')
         except Exception as e:
             print(f'Error al escribir en el archivo: {e}')
@@ -53,18 +54,18 @@ class ContadorPalabras:
             print(f'Error al leer el archivo: {e}')
 
     def contar_palabras_caracteres(self):
-        if not self.nombre_archivo:
-            print('Primero debes crear un archivo.')
-            return
+        nombre_archivo = input('Introduce el nombre del archivo que quieres analizar: ')
 
         try:
-            with open(self.nombre_archivo, 'r', encoding='utf-8') as archivo:
-                texto = archivo.read().strip()  # Elimina espacios y saltos de línea extra
+            with open(nombre_archivo, 'r', encoding='utf-8') as archivo:
+                texto = archivo.read().strip() # Ahora cuenta correctamente sin el salto de linea
                 palabras = texto.split()
                 num_palabras = len(palabras)
-                num_caracteres = len(texto)  # Ahora cuenta correctamente sin el \n extra
-                print(f'Número de palabras: {num_palabras}')
-                print(f'Número de caracteres: {num_caracteres}')
+                num_caracteres = len(texto)
+                print(f'📊 Número de palabras: {num_palabras}')
+                print(f'📊 Número de caracteres: {num_caracteres}')
+        except FileNotFoundError:
+            print('Error: El archivo no existe.')
         except Exception as e:
             print(f'Error al leer el archivo: {e}')
 
